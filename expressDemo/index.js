@@ -8,4 +8,10 @@ app.get("/", (req, res) => {
 app.get("/api/courses", (req, res) => {
   res.send([1, 2, 3]);
 });
-app.listen(3000, () => console.log("Listening port on 3000"));
+app.get("/api/courses/:id", (req, res) => {
+  res.send(req.params.id);
+});
+
+//PORTS
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening port on ${port}...`));
