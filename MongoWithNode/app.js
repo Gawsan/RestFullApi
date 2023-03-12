@@ -1,16 +1,32 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
-const gawsRouter = require("./routers/gaws");
-const url = "mongodb://localhost:27017/GawsanDB";
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-app.use(express.json);
-app.use("/api", gawsRouter);
+dotenv.config();
+app.use(bodyParser.json());
+app.use(cors());
+
+//Middleware
+app.use(express.json());
+
+//Import Routes
+const gawsRouter = require("./routers/gaws");
+
+//Route Middlewares
+app.use("/api/person", gawsRouter);
+
+const MONGODB_URI = "mongodb://localhost:27017/GawsanDB";
 
 mongoose
-  .connect(url, { useNewUrlParser: true })
-  .then(() => console.log("Connected to database"))
-  .catch((err) => console.log(err));
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err.message);
+  });
 
-const port = process.env.PORT || 9000;
-app.listen(port, () => console.log(`Listening port on ${port}...`));
+app.listen(3000, () => console.log("Server Up and running"));
